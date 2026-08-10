@@ -3,561 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[Your Name] — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Emmanuel — Web Developer</title>
 <style>
-  /* ===================== DESIGN TOKENS ===================== */
-  :root{
-    --paper:   #F0F2EC;   /* page background, cool paper */
-    --panel:   #E7EAE2;   /* sidebar / recessed panel */
-    --ink:     #1A2420;   /* primary text, deep green-black */
-    --slate:   #5C6B63;   /* secondary text */
-    --line:    #D3D8CC;   /* hairline borders */
-    --moss:    #3F6B4F;   /* primary accent — "added" green */
-    --moss-dim:#3F6B4F1a;
-    --rust:    #C8703D;   /* secondary accent — highlight/warning */
-    --rust-dim:#C8703D1a;
-    --white:   #FAFBF8;
+  :root {
+    --bg: #0d0f14;
+    --card: #161922;
+    --accent: #7c5cff;
+    --accent2: #4ade80;
+    --text: #e8e8ef;
+    --muted: #9198a9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    padding: 60px 20px 40px;
+    text-align: center;
+    background: linear-gradient(180deg, #191d2b 0%, var(--bg) 100%);
+  }
+  header h1 {
+    font-size: 2.2rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  header p {
+    color: var(--muted);
+    margin-top: 10px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .links a {
+    color: var(--text);
+    text-decoration: none;
+    background: var(--card);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid #262b3a;
+  }
+  .links a:hover { border-color: var(--accent); }
 
-    --font-display: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+  main { max-width: 900px; margin: 0 auto; padding: 20px; }
+  section { margin-bottom: 50px; }
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
   }
 
-  *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--font-display);
-    -webkit-font-smoothing:antialiased;
+  #repos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
   }
-  a{ color:var(--moss); text-decoration:none; }
-  a:hover{ text-decoration:underline; }
-  ::selection{ background:var(--rust-dim); }
-
-  button{ font-family:inherit; }
-  :focus-visible{ outline:2px solid var(--rust); outline-offset:2px; }
-
-  /* ===================== SHELL / WINDOW CHROME ===================== */
-  .editor{
-    max-width:1180px;
-    margin:2rem auto;
-    background:var(--white);
-    border:1px solid var(--line);
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 20px 60px -30px rgba(26,36,32,0.35);
+  .repo-card {
+    background: var(--card);
+    border: 1px solid #262b3a;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s, border-color 0.15s;
   }
-  .titlebar{
-    display:flex; align-items:center; gap:.6rem;
-    padding:.65rem 1rem;
-    background:var(--panel);
-    border-bottom:1px solid var(--line);
+  .repo-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .repo-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .repo-card h3 a { color: var(--text); text-decoration: none; }
+  .repo-card p { color: var(--muted); font-size: 0.88rem; min-height: 40px; }
+  .repo-meta {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    align-items: center;
   }
-  .dot{ width:11px; height:11px; border-radius:50%; }
-  .dot.red{ background:#E5806B; }
-  .dot.yellow{ background:#E8C468; }
-  .dot.green{ background:#8FBF9A; }
-  .titlebar-name{
-    margin-left:.6rem;
-    font-family:var(--font-mono);
-    font-size:.78rem;
-    color:var(--slate);
+  .lang-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent2); display: inline-block; margin-right: 5px;
   }
-  .titlebar-menu{
-    margin-left:auto;
-    display:none;
-    background:none;
-    border:1px solid var(--line);
-    border-radius:6px;
-    padding:.3rem .6rem;
-    font-family:var(--font-mono);
-    font-size:.75rem;
-    color:var(--ink);
-    cursor:pointer;
+  .skills {
+    display: flex; flex-wrap: wrap; gap: 10px;
   }
-
-  .body-grid{
-    display:grid;
-    grid-template-columns:230px 1fr;
-    min-height:600px;
+  .skills span {
+    background: var(--card);
+    border: 1px solid #262b3a;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--muted);
   }
-
-  /* ===================== SIDEBAR / EXPLORER ===================== */
-  .explorer{
-    background:var(--panel);
-    border-right:1px solid var(--line);
-    padding:1.1rem .9rem;
-  }
-  .explorer-label{
-    font-family:var(--font-mono);
-    font-size:.68rem;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--slate);
-    margin:0 0 .8rem .2rem;
-  }
-  .tree{ list-style:none; margin:0; padding:0; font-family:var(--font-mono); font-size:.84rem; }
-  .tree li{ margin:0; }
-  .tree .root{ color:var(--slate); padding:.25rem .2rem; }
-  .tree .file{
-    display:flex; align-items:center; gap:.5rem;
-    width:100%;
-    text-align:left;
-    background:none; border:none;
-    padding:.4rem .5rem .4rem 1.1rem;
-    color:var(--ink);
-    border-radius:5px;
-    cursor:pointer;
-    font-family:var(--font-mono);
-    font-size:.84rem;
-  }
-  .tree .file:hover{ background:var(--moss-dim); }
-  .tree .file.active{ background:var(--moss); color:var(--white); }
-  .tree .file .ext{ color:var(--slate); }
-  .tree .file.active .ext{ color:#DDEDE2; }
-  .tree .sub{ list-style:none; margin:0; padding:0; }
-  .tree .sub .file{ padding-left:1.7rem; font-size:.8rem; }
-
-  .explorer-status{
-    margin-top:1.4rem; padding-top:1rem;
-    border-top:1px solid var(--line);
-    font-family:var(--font-mono);
-    font-size:.72rem;
-    color:var(--slate);
-    line-height:1.6;
-  }
-
-  /* ===================== TAB BAR ===================== */
-  .tabbar{
-    display:flex;
-    overflow-x:auto;
-    background:var(--white);
-    border-bottom:1px solid var(--line);
-  }
-  .tabbar .tab{
-    font-family:var(--font-mono);
-    font-size:.8rem;
-    padding:.7rem 1.1rem;
-    color:var(--slate);
-    border-right:1px solid var(--line);
-    white-space:nowrap;
-    position:relative;
-  }
-  .tabbar .tab.active{ color:var(--ink); background:var(--paper); }
-  .tabbar .tab.active::after{
-    content:"";
-    position:absolute; left:0; right:0; bottom:-1px; height:2px;
-    background:var(--moss);
-  }
-
-  /* ===================== MAIN PANE ===================== */
-  main{ padding:0; }
-  .pane{ display:none; padding:2.4rem 2.8rem 3rem; animation:fadein .25s ease; }
-  .pane.active{ display:block; }
-  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
-
-  .eyebrow{
-    font-family:var(--font-mono);
-    font-size:.72rem;
-    color:var(--moss);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    margin:0 0 .6rem;
-  }
-  .eyebrow::before{ content:"// "; color:var(--slate); }
-
-  h1,h2,h3{ font-family:var(--font-display); font-weight:800; margin:0 0 .5rem; color:var(--ink); }
-  h1{ font-size:2.1rem; letter-spacing:-.02em; }
-  h2{ font-size:1.3rem; letter-spacing:-.01em; margin-top:0; }
-  p{ line-height:1.65; color:var(--ink); }
-  .lede{ font-size:1.05rem; color:var(--slate); max-width:56ch; }
-
-  .typed::after{
-    content:"▍"; color:var(--rust);
-    animation:blink 1s step-end infinite;
-  }
-  @media (prefers-reduced-motion: reduce){ .typed::after{ animation:none; } }
-  @keyframes blink{ 50%{ opacity:0; } }
-
-  .btn-row{ display:flex; gap:.8rem; margin-top:1.6rem; flex-wrap:wrap; }
-  .btn{
-    font-family:var(--font-mono);
-    font-size:.82rem;
-    padding:.6rem 1.1rem;
-    border-radius:6px;
-    border:1px solid var(--line);
-    background:var(--white);
-    color:var(--ink);
-    cursor:pointer;
-  }
-  .btn.primary{ background:var(--moss); color:var(--white); border-color:var(--moss); }
-  .btn:hover{ text-decoration:none; border-color:var(--moss); }
-
-  /* section blocks */
-  .block{ margin-top:2.2rem; padding-top:1.8rem; border-top:1px solid var(--line); }
-  .block:first-of-type{ margin-top:2rem; }
-
-  /* resume entries */
-  .entry{ display:grid; grid-template-columns:120px 1fr; gap:1rem; margin-bottom:1.4rem; }
-  .entry time{ font-family:var(--font-mono); font-size:.76rem; color:var(--slate); padding-top:.2rem; }
-  .entry h3{ font-size:1rem; margin-bottom:.15rem; }
-  .entry .org{ color:var(--moss); font-weight:600; font-size:.9rem; }
-  .entry p{ margin:.4rem 0 0; color:var(--slate); font-size:.92rem; }
-
-  /* projects */
-  .proj-list{ display:flex; flex-direction:column; gap:0; }
-  .proj{
-    padding:1.2rem 0; border-bottom:1px solid var(--line);
-    display:grid; grid-template-columns:1fr auto; gap:.5rem 1rem; align-items:start;
-  }
-  .proj-name{ font-family:var(--font-mono); font-weight:600; font-size:.95rem; }
-  .proj-name .dir{ color:var(--slate); font-weight:400; }
-  .proj-desc{ grid-column:1/2; color:var(--slate); font-size:.9rem; max-width:58ch; margin:.2rem 0 .6rem; }
-  .diffstat{ font-family:var(--font-mono); font-size:.76rem; white-space:nowrap; }
-  .diffstat .add{ color:var(--moss); }
-  .diffstat .del{ color:var(--rust); }
-  .tags{ grid-column:1/2; display:flex; gap:.4rem; flex-wrap:wrap; }
-  .tag{
-    font-family:var(--font-mono); font-size:.7rem;
-    background:var(--panel); color:var(--slate);
-    padding:.2rem .55rem; border-radius:4px;
-  }
-  .proj-links{ grid-column:1/2; margin-top:.6rem; display:flex; gap:1rem; font-family:var(--font-mono); font-size:.78rem; }
-
-  /* papers */
-  .paper{ padding:1.1rem 0; border-bottom:1px solid var(--line); }
-  .paper-title{ font-weight:700; font-size:1rem; }
-  .paper-meta{ font-family:var(--font-mono); font-size:.75rem; color:var(--slate); margin:.2rem 0 .5rem; }
-  .paper p{ color:var(--slate); font-size:.9rem; max-width:64ch; }
-
-  /* skills.json */
-  .jsonblock{
-    background:var(--panel); border:1px solid var(--line); border-radius:8px;
-    padding:1.4rem 1.6rem; font-family:var(--font-mono); font-size:.85rem; line-height:1.9;
-    overflow-x:auto;
-  }
-  .jsonblock .k{ color:var(--rust); }
-  .jsonblock .s{ color:var(--moss); }
-  .jsonblock .punc{ color:var(--slate); }
-
-  /* certifications */
-  .cert-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1rem; }
-  .cert{ border:1px solid var(--line); border-radius:8px; padding:1rem 1.1rem; background:var(--white); }
-  .cert-issuer{ font-family:var(--font-mono); font-size:.72rem; color:var(--moss); text-transform:uppercase; letter-spacing:.05em; }
-  .cert-name{ font-weight:700; margin:.3rem 0 .2rem; }
-  .cert-date{ font-family:var(--font-mono); font-size:.75rem; color:var(--slate); }
-
-  /* contact */
-  .terminal{
-    background:var(--ink); color:#DDE7DF; border-radius:8px;
-    padding:1.4rem 1.6rem; font-family:var(--font-mono); font-size:.88rem; line-height:2;
-  }
-  .terminal .prompt{ color:#8FBF9A; }
-  .terminal .cmd{ color:#F0EEE4; }
-  .terminal a{ color:#E8C468; }
-  .terminal a:hover{ color:#fff; }
-
-  /* status bar */
-  .statusbar{
-    display:flex; justify-content:space-between;
-    background:var(--moss); color:var(--white);
-    font-family:var(--font-mono); font-size:.72rem;
-    padding:.4rem 1rem;
-  }
-
-  /* ===================== RESPONSIVE ===================== */
-  @media (max-width: 760px){
-    .editor{ margin:0; border:none; border-radius:0; }
-    .body-grid{ grid-template-columns:1fr; }
-    .explorer{
-      display:none;
-      border-right:none; border-bottom:1px solid var(--line);
-    }
-    .explorer.open{ display:block; }
-    .titlebar-menu{ display:inline-block; }
-    .pane{ padding:1.8rem 1.3rem 2.4rem; }
-    .entry{ grid-template-columns:1fr; }
-    .entry time{ padding-top:0; }
-    h1{ font-size:1.6rem; }
+  #status { color: var(--muted); font-size: 0.9rem; }
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #262b3a;
   }
 </style>
 </head>
 <body>
 
-<div class="editor">
-
-  <!-- fake window titlebar -->
-  <div class="titlebar">
-    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-    <span class="titlebar-name">~/portfolio — [your-name].dev</span>
-    <button class="titlebar-menu" id="menuToggle" aria-expanded="false" aria-controls="explorer">files ▾</button>
+<header>
+  <h1>Emmanuel</h1>
+  <p>Independent web developer based in Kenya — building PHP-powered platforms with M-Pesa integration for the East African market.</p>
+  <div class="links">
+    <a href="https://github.com/emmanuel9863" target="_blank">GitHub</a>
+    <a href="mailto:youremail@example.com">Email</a>
+    <a href="#" id="whatsapp-link">WhatsApp</a>
   </div>
+</header>
 
-  <div class="body-grid">
-
-    <!-- ===================== SIDEBAR ===================== -->
-    <nav class="explorer" id="explorer">
-      <p class="explorer-label">Explorer</p>
-      <ul class="tree">
-        <li class="root">~/portfolio</li>
-        <li><button class="tree-btn file active" data-target="about"><span>about</span><span class="ext">.md</span></button></li>
-        <li><button class="tree-btn file" data-target="resume"><span>resume</span><span class="ext">.md</span></button></li>
-        <li><button class="tree-btn file" data-target="projects"><span>projects</span><span class="ext">/</span></button></li>
-        <li><button class="tree-btn file" data-target="papers"><span>papers</span><span class="ext">/</span></button></li>
-        <li><button class="tree-btn file" data-target="skills"><span>skills</span><span class="ext">.json</span></button></li>
-        <li><button class="tree-btn file" data-target="certs"><span>certifications</span><span class="ext">/</span></button></li>
-        <li><button class="tree-btn file" data-target="contact"><span>contact</span><span class="ext">.sh</span></button></li>
-      </ul>
-      <div class="explorer-status">
-        branch: main<br>
-        encoding: UTF-8<br>
-        status: open to work
-      </div>
-    </nav>
-
-    <div>
-      <!-- ===================== TAB BAR ===================== -->
-      <div class="tabbar" id="tabbar">
-        <div class="tab active" data-target="about">about.md</div>
-        <div class="tab" data-target="resume">resume.md</div>
-        <div class="tab" data-target="projects">projects/</div>
-        <div class="tab" data-target="papers">papers/</div>
-        <div class="tab" data-target="skills">skills.json</div>
-        <div class="tab" data-target="certs">certifications/</div>
-        <div class="tab" data-target="contact">contact.sh</div>
-      </div>
-
-      <!-- ===================== MAIN CONTENT ===================== -->
-      <main>
-
-        <!-- ABOUT -->
-        <section class="pane active" id="about">
-          <p class="eyebrow">whoami</p>
-          <h1><span id="typedName" class="typed">[Your Name]</span></h1>
-          <p class="lede">Software developer & CS student building things that mostly work on the first try. This is a placeholder bio — swap it for two or three sentences about who you are, what you study, and what kind of problems you like solving.</p>
-
-          <div class="block">
-            <h2>Quick facts</h2>
-            <p>🎓 [Your University] — B.S. Computer Science, Class of [Year]<br>
-            📍 [City, Country]<br>
-            💬 Interested in [e.g. distributed systems, ML, front-end dev]<br>
-            🛠️ Currently building [current project or focus]</p>
-          </div>
-
-          <div class="btn-row">
-            <a class="btn primary" href="#" onclick="showPane('resume');return false;">View resume →</a>
-            <a class="btn" href="mailto:[email protected]">Email me</a>
-            <a class="btn" href="https://github.com/yourname" target="_blank" rel="noopener">GitHub</a>
-          </div>
-        </section>
-
-        <!-- RESUME -->
-        <section class="pane" id="resume">
-          <p class="eyebrow">resume.md</p>
-          <h1>Resume</h1>
-          <p class="lede">A quick summary — link to a full PDF resume if you have one.</p>
-
-          <div class="block">
-            <h2>Education</h2>
-            <div class="entry">
-              <time>2023 — 2027</time>
-              <div>
-                <h3>[Your University]</h3>
-                <div class="org">B.S. Computer Science</div>
-                <p>GPA [X.X] · Relevant coursework: Data Structures, Algorithms, Operating Systems, Databases</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="block">
-            <h2>Experience</h2>
-            <div class="entry">
-              <time>Summer 2025</time>
-              <div>
-                <h3>Software Engineering Intern</h3>
-                <div class="org">[Company Name]</div>
-                <p>One line on what you shipped and its impact — e.g. "Built a service that reduced X by Y%."</p>
-              </div>
-            </div>
-            <div class="entry">
-              <time>2024 — Present</time>
-              <div>
-                <h3>Teaching Assistant, [Course Name]</h3>
-                <div class="org">[Your University]</div>
-                <p>Led weekly labs and graded assignments for [N] students.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="btn-row">
-            <a class="btn primary" href="#" target="_blank" rel="noopener">Download full resume (PDF) →</a>
-          </div>
-        </section>
-
-        <!-- PROJECTS -->
-        <section class="pane" id="projects">
-          <p class="eyebrow">projects/</p>
-          <h1>Projects</h1>
-          <p class="lede">Class projects, hackathon builds, and personal work — swap these for your own.</p>
-
-          <div class="proj-list block">
-
-            <div class="proj">
-              <div class="proj-name">project-one<span class="dir">.py</span></div>
-              <div class="diffstat"><span class="add">+312</span> <span class="del">−41</span></div>
-              <p class="proj-desc">One or two sentences on what this project does and why it's interesting — the problem it solves, not just the tech stack.</p>
-              <div class="tags"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">Course project</span></div>
-              <div class="proj-links"><a href="#">Source →</a><a href="#">Demo →</a></div>
-            </div>
-
-            <div class="proj">
-              <div class="proj-name">project-two<span class="dir">.ts</span></div>
-              <div class="diffstat"><span class="add">+198</span> <span class="del">−22</span></div>
-              <p class="proj-desc">Describe the problem, your approach, and one concrete result or metric.</p>
-              <div class="tags"><span class="tag">TypeScript</span><span class="tag">React</span><span class="tag">Personal</span></div>
-              <div class="proj-links"><a href="#">Source →</a><a href="#">Demo →</a></div>
-            </div>
-
-            <div class="proj">
-              <div class="proj-name">project-three<span class="dir">.go</span></div>
-              <div class="diffstat"><span class="add">+540</span> <span class="del">−87</span></div>
-              <p class="proj-desc">Describe the problem, your approach, and one concrete result or metric.</p>
-              <div class="tags"><span class="tag">Go</span><span class="tag">Distributed systems</span><span class="tag">Hackathon</span></div>
-              <div class="proj-links"><a href="#">Source →</a><a href="#">Write-up →</a></div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- PAPERS -->
-        <section class="pane" id="papers">
-          <p class="eyebrow">papers/</p>
-          <h1>Research & writing</h1>
-          <p class="lede">Course papers, research projects, or published work.</p>
-
-          <div class="block">
-            <div class="paper">
-              <div class="paper-title">[Paper Title Here]</div>
-              <div class="paper-meta">[Course / Journal / Conference] · [Month Year]</div>
-              <p>One or two sentences summarizing the question you explored and what you found.</p>
-              <a href="#">Read PDF →</a>
-            </div>
-            <div class="paper">
-              <div class="paper-title">[Paper Title Here]</div>
-              <div class="paper-meta">[Course / Journal / Conference] · [Month Year]</div>
-              <p>One or two sentences summarizing the question you explored and what you found.</p>
-              <a href="#">Read PDF →</a>
-            </div>
-          </div>
-        </section>
-
-        <!-- SKILLS -->
-        <section class="pane" id="skills">
-          <p class="eyebrow">skills.json</p>
-          <h1>Skills</h1>
-          <p class="lede">Rendered like the data it is.</p>
-
-          <div class="jsonblock block">
-<pre style="margin:0; white-space:pre-wrap;"><span class="punc">{</span>
-  <span class="k">"languages"</span><span class="punc">:</span> [<span class="s">"Python"</span>, <span class="s">"TypeScript"</span>, <span class="s">"Go"</span>, <span class="s">"SQL"</span>],
-  <span class="k">"frameworks"</span><span class="punc">:</span> [<span class="s">"React"</span>, <span class="s">"Node.js"</span>, <span class="s">"PyTorch"</span>, <span class="s">"Django"</span>],
-  <span class="k">"tools"</span><span class="punc">:</span> [<span class="s">"Git"</span>, <span class="s">"Docker"</span>, <span class="s">"AWS"</span>, <span class="s">"Linux"</span>],
-  <span class="k">"currently_learning"</span><span class="punc">:</span> [<span class="s">"Rust"</span>, <span class="s">"Kubernetes"</span>]
-<span class="punc">}</span></pre>
-          </div>
-        </section>
-
-        <!-- CERTIFICATIONS -->
-        <section class="pane" id="certs">
-          <p class="eyebrow">certifications/</p>
-          <h1>Certifications</h1>
-          <p class="lede">Add badges, courses, or credentials here.</p>
-
-          <div class="cert-grid block">
-            <div class="cert">
-              <div class="cert-issuer">[Issuer]</div>
-              <div class="cert-name">[Certification Name]</div>
-              <div class="cert-date">Issued [Month Year]</div>
-            </div>
-            <div class="cert">
-              <div class="cert-issuer">[Issuer]</div>
-              <div class="cert-name">[Certification Name]</div>
-              <div class="cert-date">Issued [Month Year]</div>
-            </div>
-            <div class="cert">
-              <div class="cert-issuer">[Issuer]</div>
-              <div class="cert-name">[Certification Name]</div>
-              <div class="cert-date">Issued [Month Year]</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section class="pane" id="contact">
-          <p class="eyebrow">contact.sh</p>
-          <h1>Get in touch</h1>
-          <div class="terminal block">
-            <div><span class="prompt">$</span> <span class="cmd">cat contact.sh</span></div>
-            <div>email  → <a href="mailto:[email protected]">[email protected]</a></div>
-            <div>github → <a href="https://github.com/yourname" target="_blank" rel="noopener">github.com/yourname</a></div>
-            <div>linkedin → <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">linkedin.com/in/yourname</a></div>
-            <div><span class="prompt">$</span> <span class="typed"></span></div>
-          </div>
-        </section>
-
-      </main>
-
-      <div class="statusbar">
-        <span>git:(main)</span>
-        <span id="statusRight">viewing: about.md</span>
-      </div>
+<main>
+  <section>
+    <h2>Skills</h2>
+    <div class="skills">
+      <span>PHP</span>
+      <span>MySQLi</span>
+      <span>MySQL / phpMyAdmin</span>
+      <span>M-Pesa / STK Push</span>
+      <span>PesaFlux / PayHero</span>
+      <span>REST APIs</span>
+      <span>InfinityFree Hosting</span>
     </div>
-  </div>
-</div>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <p id="status">Loading repositories from GitHub…</p>
+    <div id="repos"></div>
+  </section>
+</main>
+
+<footer>
+  &copy; <span id="year"></span> Emmanuel. Built with plain HTML &amp; the GitHub API.
+</footer>
 
 <script>
-  const panes = document.querySelectorAll('.pane');
-  const treeBtns = document.querySelectorAll('.tree-btn');
-  const tabs = document.querySelectorAll('.tab');
-  const statusRight = document.getElementById('statusRight');
+  const username = "emmanuel9863";
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-  function showPane(id){
-    panes.forEach(p => p.classList.toggle('active', p.id === id));
-    treeBtns.forEach(b => b.classList.toggle('active', b.dataset.target === id));
-    tabs.forEach(t => t.classList.toggle('active', t.dataset.target === id));
-    statusRight.textContent = 'viewing: ' + (document.querySelector('.tab.active') ? document.querySelector('.tab.active').textContent : id);
-    // close mobile explorer after choosing
-    if (window.innerWidth <= 760){
-      document.getElementById('explorer').classList.remove('open');
-      document.getElementById('menuToggle').setAttribute('aria-expanded','false');
-    }
-  }
+  fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`)
+    .then(res => {
+      if (!res.ok) throw new Error("GitHub API error: " + res.status);
+      return res.json();
+    })
+    .then(repos => {
+      const container = document.getElementById("repos");
+      const status = document.getElementById("status");
 
-  treeBtns.forEach(btn => btn.addEventListener('click', () => showPane(btn.dataset.target)));
-  tabs.forEach(tab => tab.addEventListener('click', () => showPane(tab.dataset.target)));
+      const visible = repos.filter(r => !r.fork);
 
-  document.getElementById('menuToggle').addEventListener('click', () => {
-    const exp = document.getElementById('explorer');
-    const open = exp.classList.toggle('open');
-    document.getElementById('menuToggle').setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
+      if (visible.length === 0) {
+        status.textContent = "No public repositories yet — check back soon.";
+        return;
+      }
 
-  // simple type-on effect for the name on load (respects reduced motion)
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const nameEl = document.getElementById('typedName');
-  if (!prefersReduced && nameEl){
-    const full = nameEl.textContent;
-    nameEl.textContent = '';
-    let i = 0;
-    const iv = setInterval(() => {
-      nameEl.textContent = full.slice(0, i+1);
-      i++;
-      if (i >= full.length) clearInterval(iv);
-    }, 45);
-  }
+      status.remove();
+
+      visible.forEach(repo => {
+        const card = document.createElement("div");
+        card.className = "repo-card";
+        card.innerHTML = `
+          <div>
+            <h3><a href="${repo.html_url}" target="_blank">${repo.name}</a></h3>
+            <p>${repo.description ? repo.description : "No description provided."}</p>
+          </div>
+          <div class="repo-meta">
+            ${repo.language ? `<span><span class="lang-dot"></span>${repo.language}</span>` : ""}
+            <span>★ ${repo.stargazers_count}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    })
+    .catch(err => {
+      document.getElementById("status").textContent =
+        "Couldn't load repositories right now. Visit the GitHub profile directly.";
+      console.error(err);
+    });
 </script>
 
 </body>
